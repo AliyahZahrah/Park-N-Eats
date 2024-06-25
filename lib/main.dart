@@ -5,8 +5,6 @@ import 'package:myapp/ForgotPassword/otpscreen.dart';
 import 'package:myapp/ForgotPassword/ForgotwithEmailPage.dart';
 import 'package:myapp/authentication/authentication.dart';
 import 'package:myapp/splashscreen.dart';
-import 'package:myapp/onboarding.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 void main() {
@@ -30,7 +28,7 @@ class ParkNEat extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        '/': (context) => const OnBoarding(),
+        '/': (context) => const SplashScreen(),
         '/forgot-with-email': (context) => const ForgotwithEmailPage(),
         '/otp': (context) => const OTPscreen(),
       },

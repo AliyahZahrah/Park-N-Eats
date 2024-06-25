@@ -1,12 +1,13 @@
-// orderpage.dart
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:myapp/Home_Page/homepage.dart'; // Import HomePage
+import 'package:get_storage/get_storage.dart';
+import 'package:myapp/Home_Page/homepage.dart';
 import 'package:myapp/Order_Page/bundlepackage.dart';
 import 'package:myapp/Order_Page/signaturebox.dart';
 import 'package:myapp/navbar.dart';
-import 'package:myapp/Order_Page/everydayvalue.dart'; // Import EverydayValuePage
-import 'package:myapp/Order_Page/emptycart.dart'; // Import CartEmptyPage
+import 'package:myapp/Order_Page/everydayvalue.dart';
+import 'package:myapp/Order_Page/emptycart.dart';
+import 'package:myapp/Order_Page/cartfood.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({super.key});
@@ -16,7 +17,7 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderPageState extends State<OrderPage> {
-  final int _currentIndex = 2;
+  int _currentIndex = 2;
   int _currentCarouselIndex = 0;
 
   final List<String> imgList = [
@@ -28,26 +29,40 @@ class _OrderPageState extends State<OrderPage> {
   final List<Map<String, String>> bestSellingItems = [
     {
       'title': 'Crispy Chicken Bucket',
+      'name': 'Crispy Chicken Bucket',
+      'description': 'Crispy Chicken Bucket',
       'imageUrl': 'assets/img/crispychicken.png',
+      'price': '30000',
     },
     {
       'title': 'Special Crispy Burger',
+      'name': 'Special Crispy Burger',
+      'description': 'Special Crispy Burger',
       'imageUrl': 'assets/img/burger.png',
+      'price': '30000',
     },
     {
       'title': 'Spicy Chicken Wings',
+      'name': 'Spicy Chicken Wings',
+      'description': 'Spicy Chicken Wings',
       'imageUrl': 'assets/img/spicywings.png',
+      'price': '25000',
     },
     {
       'title': 'Fun Fries',
+      'name': 'Fun Fries',
+      'description': 'Fun Fries',
       'imageUrl': 'assets/img/kfc5.png',
+      'price': '15000',
     },
   ];
+
+  final GetStorage storage = GetStorage();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Background color as per the Figma design
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.chevron_left),
@@ -58,13 +73,13 @@ class _OrderPageState extends State<OrderPage> {
             );
           },
         ),
-        backgroundColor: Colors.white, // White background for AppBar
+        backgroundColor: Colors.white,
         title: const Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Order',
             style: TextStyle(
-              color: Colors.black, // Change text color to black
+              color: Colors.black,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
@@ -76,15 +91,12 @@ class _OrderPageState extends State<OrderPage> {
           slivers: [
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0), // Reduced vertical padding
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      'assets/img/logokfc.png', // Logo image asset
-                      height: 40, // Logo size
-                      fit: BoxFit.contain, // Adjust the fit as necessary
-                    ),
+                    Image.asset('assets/img/logokfc.png', height: 40),
+                    const SizedBox(width: 10),
                     const Text(
                       'X',
                       style: TextStyle(
@@ -93,73 +105,77 @@ class _OrderPageState extends State<OrderPage> {
                         color: Colors.black,
                       ),
                     ),
-                    Image.asset(
-                      'assets/img/logoapp2.png', // Logo image asset
-                      height: 60, // Logo size
-                      fit: BoxFit.contain, // Adjust the fit as necessary
-                    ),
+                    const SizedBox(width: 10),
+                    Image.asset('assets/img/logoapp2.png', height: 40),
                   ],
                 ),
               ),
             ),
             SliverToBoxAdapter(
-              child: CarouselSlider(
-                options: CarouselOptions(
-                  height: 150, // Reduce the height of the Carousel
-                  autoPlay: true,
-                  enlargeCenterPage: true,
-                  onPageChanged: (index, reason) {
-                    setState(() {
-                      _currentCarouselIndex = index;
-                    });
-                  },
-                ),
-                items: imgList.map((item) => Center(
-                  child: Image.asset(item, fit: BoxFit.cover, width: 1000),
-                )).toList(),
+              child: Column(
+                children: [
+                  CarouselSlider(
+                    options: CarouselOptions(
+                      height: 150,
+                      autoPlay: true,
+                      enlargeCenterPage: true,
+                      onPageChanged: (index, reason) {
+                        setState(() {
+                          _currentCarouselIndex = index;
+                        });
+                      },
+                    ),
+                    items: imgList.map((item) => Center(
+                      child: Image.asset(item, fit: BoxFit.cover, width: 1000),
+                    )).toList(),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: imgList.map((url) {
+                      int index = imgList.indexOf(url);
+                      return Container(
+                        width: 8.0,
+                        height: 8.0,
+                        margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: _currentCarouselIndex == index
+                              ? const Color.fromARGB(255, 97, 94, 252)
+                              : const Color.fromRGBO(0, 0, 0, 0.4),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ],
               ),
             ),
             SliverToBoxAdapter(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: imgList.map((url) {
-                  int index = imgList.indexOf(url);
-                  return Container(
-                    width: 8.0,
-                    height: 8.0,
-                    margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: _currentCarouselIndex == index
-                          ? const Color.fromARGB(255, 97, 94, 252)
-                          : const Color.fromRGBO(0, 0, 0, 0.4),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Menu Category',
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
-                  );
-                }).toList(),
+                    IconButton(
+                      icon: const Icon(Icons.shopping_cart, color: Color.fromARGB(255, 97, 94, 252), size: 35),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => CartFoodPage()),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
             SliverPadding(
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Menu Category',
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.shopping_cart, color: Color.fromARGB(255, 97, 94, 252), size: 35), // Purple cart icon
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const CartEmptyPage()),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
                   const SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -176,11 +192,11 @@ class _OrderPageState extends State<OrderPage> {
                           MaterialPageRoute(builder: (context) => const BundlePackagePage()),
                         );
                       }),
-                      _buildCategoryCard('Signature   Box', 'assets/img/signaturebox.png', () {
+                      _buildCategoryCard('Signature Box', 'assets/img/signaturebox.png', () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => const SignatureBoxPage()),
-                        );// Add navigation or action for Signature Box
+                        );
                       }),
                     ],
                   ),
@@ -205,19 +221,19 @@ class _OrderPageState extends State<OrderPage> {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        color: const Color.fromARGB(255, 189, 189, 245), // Card color as per the Figma design
+        color: const Color.fromARGB(255, 189, 189, 245),
         child: SizedBox(
           width: 100,
           height: 100,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(imageUrl, height: 50, width: 50), // Add logo image
+              Image.asset(imageUrl, height: 50, width: 50),
               const SizedBox(height: 8),
               Text(
                 title,
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.black), // Text color black
+                style: const TextStyle(color: Colors.black),
               ),
             ],
           ),
@@ -226,9 +242,9 @@ class _OrderPageState extends State<OrderPage> {
     );
   }
 
-  Widget _buildBestSellingCard(String title, String imageUrl) {
+  Widget _buildBestSellingCard(String title, String imageUrl, String name, String description, int price) {
     return Card(
-      color: const Color.fromARGB(255, 189, 189, 245), // Card color as per the Figma design
+      color: const Color.fromARGB(255, 189, 189, 245),
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
@@ -243,7 +259,7 @@ class _OrderPageState extends State<OrderPage> {
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
                   child: Image.asset(
                     imageUrl,
-                    height: 110, // Reduce the height of the image
+                    height: 110,
                     width: 120,
                     fit: BoxFit.cover,
                   ),
@@ -253,10 +269,23 @@ class _OrderPageState extends State<OrderPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   title,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black), // Text color black
+                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
                 ),
               ),
             ],
+          ),
+          Positioned(
+            bottom: 4,
+            right: 4,
+            child: CircleAvatar(
+              backgroundColor: const Color.fromARGB(255, 97, 94, 252),
+              child: IconButton(
+                icon: const Icon(Icons.add, color: Colors.white),
+                onPressed: () {
+                  _addCardToStorage(name, description, price, imageUrl, 1);
+                },
+              ),
+            ),
           ),
         ],
       ),
@@ -264,15 +293,43 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   Widget _buildBestSellingList() {
-    return SizedBox(
-      height: 180, // Reduce the height of the best selling items list
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: bestSellingItems.length,
-        itemBuilder: (context, index) {
-          final item = bestSellingItems[index];
-          return _buildBestSellingCard(item['title']!, item['imageUrl']!);
-        },
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 3 / 3,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+      ),
+      itemCount: bestSellingItems.length,
+      itemBuilder: (context, index) {
+        final item = bestSellingItems[index];
+        return _buildBestSellingCard(
+          item['title']!,
+          item['imageUrl']!,
+          item['name']!,
+          item['description']!,
+          int.parse(item['price']!),
+        );
+      },
+    );
+  }
+
+  void _addCardToStorage(String name, String description, int price, String imageUrl, int quantity) {
+    List<dynamic> savedItems = storage.read<List<dynamic>>('cartItems') ?? [];
+    Map<String, dynamic> newItem = {
+      'name': name,
+      'description': description,
+      'price': price,
+      'imageUrl': imageUrl,
+      'quantity': quantity,
+    };
+    savedItems.add(newItem);
+    storage.write('cartItems', savedItems);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('$name added to cart!'),
       ),
     );
   }

@@ -55,7 +55,7 @@ class TopUpPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'My Balance',
                     style: TextStyle(
                             fontSize: 20, // Adjusted text size
@@ -63,14 +63,14 @@ class TopUpPage extends StatelessWidget {
                             fontWeight: FontWeight.w500,
                           ),
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Row(
                     children: [
-                      Icon(Icons.account_balance_wallet, color: Colors.white, size: 30),
-                      SizedBox(width: 5),
+                      const Icon(Icons.account_balance_wallet, color: Colors.white, size: 30),
+                      const SizedBox(width: 5),
                       Text(
                         '${formatRupiah(box.read('saldo') ?? 0)}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -106,7 +106,7 @@ class TopUpPage extends StatelessWidget {
                     },
                   ),
                   TopUpMethodCard(
-                    icon: Icons.account_balance,
+                    icon: Icons.credit_card_rounded,
                     title: 'ATM',
                     description: 'Use an ATM machine with a Virtual Account code',
                     onTap: () {

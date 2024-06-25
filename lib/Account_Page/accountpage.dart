@@ -47,15 +47,15 @@ class _AccountPageState extends State<AccountPage> {
             children: [
               Row(
                 children: [
-                  CircleAvatar(
+                  const CircleAvatar(
                     radius: 40,
                     backgroundColor: Colors.grey,
                     child: Icon(Icons.person, size: 50),
                   ),
-                  SizedBox(width: 10), // Add space between the avatar and text
+                  const SizedBox(width: 10), // Add space between the avatar and text
                   Text(
                     '${box.read('fullName') ?? "Richard"}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,

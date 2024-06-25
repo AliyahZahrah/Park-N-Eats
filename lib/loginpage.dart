@@ -56,14 +56,14 @@ class _LoginPageState extends State<LoginPage> {
 
         if (!emailExists) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
                 content: Text('No user found for that email in the database.')),
           );
           return;
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
               content: Text(
                   'Failed to check user in the database. Please try again later.')),
         );
@@ -94,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
             content: Text('An unexpected error occurred. Please try again.')),
       );
     }

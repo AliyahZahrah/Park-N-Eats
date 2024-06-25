@@ -11,11 +11,11 @@ class ArticleCard extends StatelessWidget {
   final VoidCallback onPressed;
 
   const ArticleCard({
-    Key? key, // Use Key? key instead of super.key
+    super.key, // Use Key? key instead of super.key
     required this.title,
     required this.imageUrl,
     required this.onPressed,
-  }) : super(key: key); // Pass key to super constructor
+  }); // Pass key to super constructor
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +61,7 @@ class ArticleCard extends StatelessWidget {
 }
 
 class ArticleList extends StatelessWidget {
-  const ArticleList({Key? key}) : super(key: key);
+  const ArticleList({super.key});
 
   @override
   Widget build(BuildContext context) {

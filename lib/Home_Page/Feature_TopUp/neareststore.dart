@@ -16,7 +16,7 @@ class NearestStorePage extends StatelessWidget {
     required int amount,
     required BuildContext context, // Add context to the parameters
   }) async {
-    String uuid = Uuid().v4();
+    String uuid = const Uuid().v4();
     final shortUuid = uuid.substring(0, 5);
     final url = Uri.parse('https://api.sandbox.midtrans.com/v1/payment-links');
 
@@ -135,7 +135,7 @@ class NearestStorePage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'My Balance',
                     style: TextStyle(
                       fontSize: 20, // Adjusted text size
@@ -143,15 +143,15 @@ class NearestStorePage extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Row(
                     children: [
-                      Icon(Icons.account_balance_wallet,
+                      const Icon(Icons.account_balance_wallet,
                           color: Colors.white, size: 30),
-                      SizedBox(width: 5),
+                      const SizedBox(width: 5),
                       Text(
                         '${formatRupiah(box.read('saldo') ?? 0)}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -177,7 +177,7 @@ class NearestStorePage extends StatelessWidget {
             TextField(
               controller: _amountController,
               keyboardType:
-                  TextInputType.numberWithOptions(signed: true, decimal: true),
+                  const TextInputType.numberWithOptions(signed: true, decimal: true),
               decoration: const InputDecoration(
                 labelText: 'Enter minimum top up here',
                 hintText: 'Minimum Rp 10.000,00',

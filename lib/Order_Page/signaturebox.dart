@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'cartfood.dart';
 
 void main() {
@@ -82,6 +83,33 @@ class FoodItemCard extends StatelessWidget {
     required this.imageUrl,
   });
 
+  void _addCardToStorage(String name, String description, int price, String imageUrl, int quantity) {
+    final storage = GetStorage();
+    List<dynamic> savedItems = storage.read<List<dynamic>>('cart_items') ?? [];
+    bool itemExists = false;
+
+    for (var item in savedItems) {
+      if (item['name'] == name) {
+        item['quantity'] += quantity;
+        itemExists = true;
+        break;
+      }
+    }
+
+    if (!itemExists) {
+      Map<String, dynamic> newItem = {
+        'name': name,
+        'description': description,
+        'price': price,
+        'imageUrl': imageUrl,
+        'quantity': quantity,
+      };
+      savedItems.add(newItem);
+    }
+
+    storage.write('cart_items', savedItems);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -119,7 +147,10 @@ class FoodItemCard extends StatelessWidget {
                   const SizedBox(height: 8),
                   ElevatedButton(
                     onPressed: () {
-                      // Button is non-functional
+                      _addCardToStorage(name, description, price, imageUrl, 1);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('$name added to cart'))
+                      );
                     },
                     child: const Text(
                       "Add to Cart",

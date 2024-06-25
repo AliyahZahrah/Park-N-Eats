@@ -63,7 +63,7 @@ class _TicketOnly3PageState extends State<TicketOnly3Page>
 
   Future<void> _savePurchaseHistory(
       String email, String title, String date, int totalPrice) async {
-    final String firebaseUrl =
+    const String firebaseUrl =
         'https://park-n-eats-default-rtdb.asia-southeast1.firebasedatabase.app/history.json';
 
     final Map<String, dynamic> purchaseHistory = {
@@ -88,7 +88,7 @@ class _TicketOnly3PageState extends State<TicketOnly3Page>
   Future<bool> _handlePurchase(String ticketType) async {
     final String email = box.read('email');
     final int totalPrice = _prices[ticketType]! * _selectedTickets;
-    final String firebaseUrl =
+    const String firebaseUrl =
         'https://park-n-eats-default-rtdb.asia-southeast1.firebasedatabase.app/users.json';
 
     // Fetch user balance from Firebase
@@ -406,6 +406,10 @@ class _TicketOnly3PageState extends State<TicketOnly3Page>
     if (_tabController.length == 2) {
       return Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+          icon: const Icon(Icons.chevron_left),
+          onPressed: () => Navigator.of(context).pop(),
+          ),
           title: const Text('Ticket'),
           centerTitle: true,
         ),

@@ -1,11 +1,77 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'checkoutfood.dart';
 
-class CartFoodPage extends StatelessWidget {
+class CartFoodPage extends StatefulWidget {
   const CartFoodPage({super.key});
 
   @override
+  _CartFoodPageState createState() => _CartFoodPageState();
+}
+
+class _CartFoodPageState extends State<CartFoodPage> {
+  final GetStorage storage = GetStorage();
+  List<Map<String, dynamic>> cartItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCartItems();
+  }
+
+  void fetchCartItems() {
+    List<dynamic> storedItems = storage.read<List<dynamic>>('cart_items') ?? [];
+    setState(() {
+      cartItems = storedItems.cast<Map<String, dynamic>>();
+    });
+  }
+
+  void incrementQuantity(int index) {
+    setState(() {
+      cartItems[index]['quantity'] += 1;
+      storage.write('cart_items', cartItems);
+    });
+  }
+
+  void decrementQuantity(int index) {
+    setState(() {
+      if (cartItems[index]['quantity'] > 1) {
+        cartItems[index]['quantity'] -= 1;
+      } else {
+        cartItems.removeAt(index);
+      }
+      storage.write('cart_items', cartItems);
+    });
+  }
+
+  int calculateTotal() {
+    int total = 0;
+    for (var item in cartItems) {
+      total += (item['price'] as int) * (item['quantity'] as int);
+    }
+    return total;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    String formatRupiah(int amount) {
+      String amountStr = amount.toString();
+      String result = '';
+      int count = 0;
+      for (int i = amountStr.length - 1; i >= 0; i--) {
+        result = amountStr[i] + result;
+        count++;
+
+        if (count == 3 && i != 0) {
+          result = '.' + result;
+          count = 0;
+        }
+      }
+
+      result = 'Rp' + result;
+      return result;
+    }
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -16,31 +82,21 @@ class CartFoodPage extends StatelessWidget {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
       ),
-      body: ListView(
+      body: ListView.builder(
         padding: const EdgeInsets.all(16.0),
-        children: const [
-          FoodItemCard(
-            name: "2 Meal Deal Box + 2 Ticket Jatim Park Fast Track",
-            description: "2 Meal Deal Box with 2 Ticket Fast Track to Jatim Park 1 2 3",
-            price: 150000,
-            imageUrl: 'assets/img/mealdeal1.jpeg',
-            quantity: 1,
-          ),
-          FoodItemCard(
-            name: "Special Crispy Burger",
-            description: "Crispy chicken burger with spicy mayo",
-            price: 30000,
-            imageUrl: 'assets/img/burger.png',
-            quantity: 1,
-          ),
-          FoodItemCard(
-            name: "Signature Box 3",
-            description: "1 Giant Taco + 1 Hot or Crispy Fried Chicken + 1 Cola",
-            price: 50000,
-            imageUrl: 'assets/img/signaturebox3.jpg',
-            quantity: 1,
-          ),
-        ],
+        itemCount: cartItems.length,
+        itemBuilder: (context, index) {
+          final item = cartItems[index];
+          return FoodItemCard(
+            name: item['name'],
+            description: item['description'],
+            price: item['price'],
+            imageUrl: item['imageUrl'],
+            quantity: item['quantity'],
+            onIncrement: () => incrementQuantity(index),
+            onDecrement: () => decrementQuantity(index),
+          );
+        },
       ),
       bottomNavigationBar: BottomAppBar(
         child: Padding(
@@ -48,9 +104,9 @@ class CartFoodPage extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "Total:  Rp. 230.000",
-                style: TextStyle(
+              Text(
+                "Total:  ${formatRupiah(calculateTotal())}",
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.red,
@@ -85,6 +141,8 @@ class FoodItemCard extends StatelessWidget {
   final int price;
   final String imageUrl;
   final int quantity;
+  final VoidCallback onIncrement;
+  final VoidCallback onDecrement;
 
   const FoodItemCard({
     super.key,
@@ -93,10 +151,30 @@ class FoodItemCard extends StatelessWidget {
     required this.price,
     required this.imageUrl,
     required this.quantity,
+    required this.onIncrement,
+    required this.onDecrement,
   });
 
   @override
   Widget build(BuildContext context) {
+    String formatRupiah(int amount) {
+      String amountStr = amount.toString();
+      String result = '';
+      int count = 0;
+      for (int i = amountStr.length - 1; i >= 0; i--) {
+        result = amountStr[i] + result;
+        count++;
+
+        if (count == 3 && i != 0) {
+          result = '.' + result;
+          count = 0;
+        }
+      }
+
+      result = 'Rp' + result;
+      return result;
+    }
+
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       child: Padding(
@@ -128,22 +206,18 @@ class FoodItemCard extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        "Rp. ${price.toString()}   ",
+                        "${formatRupiah(price)}",
                         style: const TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.bold),
-                        ),
+                      ),
                       const SizedBox(width: 16),
                       IconButton(
                         icon: const Icon(Icons.remove),
-                        onPressed: () {
-                          // Decrement quantity
-                        },
+                        onPressed: onDecrement,
                       ),
                       Text(quantity.toString()),
                       IconButton(
                         icon: const Icon(Icons.add),
-                        onPressed: () {
-                          // Increment quantity
-                        },
+                        onPressed: onIncrement,
                       ),
                     ],
                   ),

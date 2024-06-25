@@ -406,6 +406,10 @@ class _TicketOnlyPageState extends State<TicketOnlyPage>
     if (_tabController.length == 2) {
       return Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+          icon: const Icon(Icons.chevron_left),
+          onPressed: () => Navigator.of(context).pop(),
+          ),
           title: const Text('Ticket'),
           centerTitle: true,
         ),

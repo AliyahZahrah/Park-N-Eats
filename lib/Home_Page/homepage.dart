@@ -109,14 +109,14 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Text(
                         'Hi, ${box.read('fullName') ?? "Richard"}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
                       ),
-                      SizedBox(width: 5),
-                      Icon(Icons.waving_hand, color: Colors.orange, size: 24),
+                      const SizedBox(width: 5),
+                      const Icon(Icons.waving_hand, color: Colors.orange, size: 24),
                     ],
                   ),
                   IconButton(
